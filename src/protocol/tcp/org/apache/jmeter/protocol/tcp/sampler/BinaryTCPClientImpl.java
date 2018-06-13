@@ -128,7 +128,7 @@ public class BinaryTCPClientImpl extends AbstractTCPClient {
     public String read(InputStream is, SampleResult sampleResult) throws ReadException {
         ByteArrayOutputStream w = new ByteArrayOutputStream();
         try {
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[4096 * 10];
             int x = 0;
             boolean first = true;
             while ((x = is.read(buffer)) > -1) {
@@ -137,7 +137,7 @@ public class BinaryTCPClientImpl extends AbstractTCPClient {
                     first = false;
                 }
                 w.write(buffer, 0, x);
-                if (useEolByte && (buffer[x - 1] == eolByte)) {
+                if ((useEolByte && (buffer[x - 1] == eolByte)) || (!useEolByte && x == w.size())) {
                     break;
                 }
             }
